@@ -19,6 +19,10 @@ function initialize(RED) {
   // add request handler
   let callback = async function (req, res) {
     res.set('Content-Type', customRegistry.contentType);
+    res.set('X-Content-Type-Options', 'nosniff');
+    if (process.env.HOST_NAME) {
+      res.set('Access-Control-Allow-Origin', process.env.HOST_NAME);
+    }
     res.end(await customRegistry.metrics());
   };
   let path = process.env.PROMETHEUS_METRICS_PATH || DEFAULT_PROMETHEUS_METRICS_PATH;
